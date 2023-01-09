@@ -2,7 +2,12 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    //tsconfig 파일에 outDir 옵션을 명시했을 경우
+    //Cannot write file '...' because it would overwrite input file. 에러가 발생
+    //tsconfig파일에 exclude 옵션에 outDir path를 추가하면 해결
+    "outDir": "./dist/",
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": ["./node_modules/", "./dist/**/*"]
 }
