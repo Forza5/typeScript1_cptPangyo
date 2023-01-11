@@ -31,15 +31,83 @@
 // }
 
 // 유니온 타입을 이용한 선언
-function logText(text: string | number) {
-    console.log(text);
-    // string과 number에 공통으로 접근할 수 있는 속성이나 API만 사용가능
+// function logText(text: string | number) {
+//     console.log(text);
+//     // string과 number에 공통으로 접근할 수 있는 속성이나 API만 사용가능
     
-    return text;
-}
+//     return text;
+// }
 
-const a = logText('a'); // a는 string과 number 타입을 모두 가지고 있음
-logText(10);
+// const a = logText('a'); // a는 string과 number 타입을 모두 가지고 있음
+// logText(10);
 // const num = logNumber(10);
 // logText(true);
 
+// 제네릭을 이용한 type선언
+function logText<T>(text: T):T {
+    console.log(text);
+    return text;
+}
+
+// 이처럼 type에 대한 이점을 제네릭이 확실히 가져감
+const str = logText<string>('abc');
+str.split('');
+const login = logText<boolean>(true);
+
+// logText('a');
+// logText(10);
+
+// interface에 제네릭을 선언하는 방법
+// interface Dropdown {
+//     value: string;
+//     selected: boolean;
+// }
+
+// const obj: Dropdown = {value: 'abc', selected: false};
+
+interface Dropdown<T> {
+    value: T;
+    selected: boolean;
+}
+
+const obj: Dropdown<string> = {value: 'abc', selected: false};
+
+// 제네릭의 타입 제한
+//반환값은 굳이 작성하지 않아도 됨
+//하지만 작성해주는 것이 가독성에 있어서 좋음
+// T는 배열이기때문에 length가 제공이 될거라고 볼 수 있음
+// function logTextLength<T>(text: T[]): T[] {
+//     console.log(text.length);
+//     //text는 배열이기때문에 forEach 반복문 돌릴 수 있음
+//     text.forEach(function(text) {
+//         console.log(text);
+//     });
+//     return text;
+// }
+// logTextLength(['hi', 'abc']);
+
+// 제네릭 타입 제한2 - 정의된 타입 이용하기
+interface LengthType {
+    length: number;
+}
+function logTextLength<T extends LengthType>(text: T): T {
+    text.length;
+    return text;
+}
+logTextLength('a'); // 문자열은 length 속성이 적용 가능하기 때문에 문제 없음
+logTextLength({length: 10}); // 객체 문제 없이 사용 가능
+
+// 제네릭 타입 제한 3 - keyof
+interface ShoppingItem {
+    name: string;
+    price: number;
+    stock: number;
+}
+//ShoppingItem에 있는 key들 중 하나가 제네릭이 된다!!!
+//주의) keyof는 interface에 있는 key만 들어갈 수 있게 타입 제약!!
+// 위 ShoppingItem의 key= name, number, stock이 모두 string이자 key이기 때문에 "name", "price", "stock"값만 들어갈 수 있다.
+function getShoppingItemOption<T extends keyof ShoppingItem>(itemOption: T): T {
+    return itemOption;
+}
+// getShoppingItemOption('a');
+getShoppingItemOption("name");
